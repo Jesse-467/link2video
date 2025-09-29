@@ -1,8 +1,8 @@
 # 🎬 Smart Video Link Downloader
 
-A command-line tool based on `yt-dlp` and `Playwright` that automatically identifies and downloads original watermark-free videos from multiple short video platforms (such as **Douyin**, **Bilibili**, **YouTube**, etc.).
+A command-line tool based on `yt-dlp` and `Playwright` that automatically identifies and downloads original watermark-free videos from multiple short video platforms (such as **Douyin**, **Xiaohongshu**, **Bilibili**, **YouTube**, etc.).
 
-For **Douyin**, it uses dedicated parsing logic to obtain real video addresses; other platforms use `yt-dlp` for high-quality audio and video downloads.
+For **Douyin** and **Xiaohongshu**, it uses dedicated parsing logic to obtain real video addresses; other platforms use `yt-dlp` for high-quality audio and video downloads.
 
 ---
 
@@ -104,6 +104,12 @@ downloads/
 │   │   └── timestamp_title_result.json
 │   └── video_title2/
 │       └── [files...]
+├── xiaohongshu/
+│   ├── video_title-author_name/
+│   │   ├── video_title.mp4
+│   │   └── video_title_cover.jpg
+│   └── another_video-another_author/
+│       └── [files...]
 ├── bilibili/
 │   └── video_title/
 │       ├── video_title.mp4
@@ -121,6 +127,7 @@ downloads/
 | Platform | Processing Method | Download Support | Special Features |
 |----------|------------------|------------------|------------------|
 | Douyin | Playwright | ✅ Watermark-free | Dedicated parser, supports cover, avatar, JSON |
+| Xiaohongshu | Playwright | ✅ High-quality | Dedicated parser, bypasses anti-crawling |
 | Bilibili | yt-dlp | ✅ | High-quality audio/video |
 | YouTube | yt-dlp | ✅ | Multi-format support |
 | Twitter/X | yt-dlp | ✅ | Short video download |

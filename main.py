@@ -3,6 +3,7 @@ import os
 import argparse
 import yt_dlp
 from process.douyin import handle_aweme_download
+from process.xiaohongshu_playwright import handle_xiaohongshu_download
 
 
 def get_site(url: str):
@@ -13,6 +14,8 @@ def get_site(url: str):
         return "bilibili"
     if "youtube.com" in url or "youtu.be" in url:
         return "youtube"
+    if "xiaohongshu.com" in url:
+        return "xiaohongshu"
     return "generic"
 
 
@@ -21,6 +24,14 @@ def handle_platform_download(url: str, site: str, download_mode: str = "all"):
     if site == "douyin":
         print(">>> 检测到抖音链接，使用专用解析器下载")
         handle_aweme_download(url, download_mode)
+        return
+    elif site == "xiaohongshu":
+        print(">>> 检测到小红书链接，使用专用解析器下载")
+        success, message = handle_xiaohongshu_download(url, download_mode)
+        if success:
+            print(f">>> 小红书下载成功: {message}")
+        else:
+            print(f">>> 小红书下载失败: {message}")
         return
 
     # 其余平台用 yt-dlp 处理
