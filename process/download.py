@@ -118,8 +118,9 @@ class Download(object):
             
             # 构建文件名
             file_name = f"{awemeDict['create_time']}_{utils.replaceStr(awemeDict['desc'])}"
-            aweme_path = save_path / file_name if self.folderstyle else save_path
-            aweme_path.mkdir(exist_ok=True)
+            
+            # 直接保存到指定路径，不再创建子文件夹
+            aweme_path = save_path
             
             # 保存JSON数据
             if self.resjson:

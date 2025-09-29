@@ -18,16 +18,18 @@ logging.basicConfig(
 # 改名为douyin_logger以避免冲突
 douyin_logger = logging.getLogger("DouYin")
 
-dl = Download(
-    thread=1,
-    music=True,
-    cover=True,
-    avatar=True,
-    resjson=True,
-    folderstyle=True
-)
+def create_downloader(download_mode):
+    """根据下载模式创建下载器"""
+    if download_mode == "a":
+        return Download(thread=1, music=True, cover=False, avatar=False, resjson=False, folderstyle=True)
+    elif download_mode == "v":
+        return Download(thread=1, music=False, cover=False, avatar=False, resjson=False, folderstyle=True)
+    elif download_mode == "av":
+        return Download(thread=1, music=True, cover=False, avatar=False, resjson=False, folderstyle=True)
+    else:  # all
+        return Download(thread=1, music=True, cover=True, avatar=True, resjson=True, folderstyle=True)
 
-def handle_aweme_download(share_url):
+def handle_aweme_download(share_url, download_mode="all"):
 
 
     """处理单个作品下载"""
@@ -60,8 +62,14 @@ def handle_aweme_download(share_url):
             datanew = result
 
             if datanew:
-                # awemePath = os.path.join(configModel["path"], "aweme")
-                awemePath = os.path.join("downloads", "douyin")
+                # 创建基于视频标题的独立文件夹
+                video_title = datanew.get("desc", "未知标题")
+                # 清理标题中的非法字符，用于文件夹命名
+                import re
+                safe_title = re.sub(r'[<>:"/\\|?*]', '_', video_title)
+                safe_title = safe_title[:50]  # 限制长度
+                
+                awemePath = os.path.join("downloads", "douyin", safe_title)
                 os.makedirs(awemePath, exist_ok=True)
 
                 # 下载前检查视频URL
@@ -75,6 +83,8 @@ def handle_aweme_download(share_url):
                     continue
 
                 douyin_logger.info(f"[  提示  ]:获取到视频URL，准备下载")
+                # 根据下载模式创建下载器
+                dl = create_downloader(download_mode)
                 dl.userDownload(awemeList=[datanew], savePath=awemePath)
                 douyin_logger.info(f"[  成功  ]:视频下载完成")
                 return True

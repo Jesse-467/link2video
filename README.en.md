@@ -1,34 +1,35 @@
 # 🎬 Smart Video Link Downloader
 
-A command-line tool based on `yt-dlp` and `Playwright` for automatically identifying and downloading original, watermark-free videos from various short video platforms (such as **Douyin**, **Bilibili**, **YouTube**, etc.).
+A command-line tool based on `yt-dlp` and `Playwright` that automatically identifies and downloads original watermark-free videos from multiple short video platforms (such as **Douyin**, **Bilibili**, **YouTube**, etc.).
 
-This tool uses a custom parsing logic for **Douyin** to retrieve the real video address, while other platforms rely on `yt-dlp` to provide high-quality audio and video downloads.
+For **Douyin**, it uses dedicated parsing logic to obtain real video addresses; other platforms use `yt-dlp` for high-quality audio and video downloads.
 
 ---
 
 ## ✨ Features
 
-- ✅ **Automatic platform detection**: Recognizes platform type from shared video links (Douyin, Bilibili, YouTube, etc.)
-- 📥 **Fast audio/video download**: Separates audio and video for higher quality
-- 🧼 **Douyin watermark-free**: Specialized logic to extract the real video URL without watermark
-- 🖥️ **Simple CLI operation**: Suitable for batch processing and scripting integration
-- 🌐 **Multi-platform support**: Built on `yt-dlp`, supporting a wide range of platforms
+- ✅ **Automatic Platform Detection**: Input a share link to identify platform type (Douyin, Bilibili, YouTube, etc.)
+- 📥 **Flexible Download Modes**: Support audio-only, video-only, audio+video, or all files
+- 🧼 **Douyin Watermark-Free Parsing**: Specially designed for Douyin, gets real addresses, bypasses watermark restrictions
+- 🖥️ **Simple Command-Line Interface**: Supports multiple parameters, suitable for batch processing and automation scripts
+- 🌐 **Extensive Platform Support**: Based on yt-dlp, supports 1000+ platforms
+- 📁 **Smart Folder Management**: Each video automatically creates an independent folder with clear structure
 
 ---
 
 ## 🧰 Usage
 
-### 1️⃣ Install dependencies
+### 1️⃣ Install Dependencies
 
-Ensure Python 3.7 or later is installed.
+Ensure Python 3.7+ is installed.
 
-Install required dependencies:
+Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Install Playwright browser drivers (only needed once):
+Install Playwright browser drivers (first time only):
 
 ```bash
 playwright install
@@ -36,58 +37,109 @@ playwright install
 
 ---
 
-### 2️⃣ Command-line usage
+### 2️⃣ Command Line Usage
 
+#### **Basic Syntax**
 ```bash
-python main.py <video_share_url>
+python main.py <video_share_link> [download_mode]
 ```
 
-Example:
+#### **Download Mode Parameters**
+| Parameter | Function | Downloads |
+|-----------|----------|-----------|
+| `-a` | Audio only | `.mp3` files |
+| `-v` | Video only | `.mp4` files |
+| `-av` | Audio + Video | `.mp3` + `.mp4` files |
+| `-all` | All files | Audio + Video + Cover + Avatar + JSON |
+| No parameter | Default mode | Same as `-all` |
 
+#### **Usage Examples**
+
+**Douyin Videos:**
 ```bash
-python main.py https://v.douyin.com/xxxxx/
+# Download all files (default)
+python main.py "https://v.douyin.com/xxxxx/"
+
+# Audio only
+python main.py "https://v.douyin.com/xxxxx/" -a
+
+# Video only
+python main.py "https://v.douyin.com/xxxxx/" -v
+
+# Audio + Video
+python main.py "https://v.douyin.com/xxxxx/" -av
 ```
 
-The tool will automatically detect the platform and download the corresponding video and audio.
+**Other Platforms:**
+```bash
+# Bilibili video
+python main.py "https://www.bilibili.com/video/BV1xxx" -av
+
+# YouTube video
+python main.py "https://youtube.com/watch?v=xxx" -v
+
+# Twitter video
+python main.py "https://twitter.com/xxx/status/xxx" -a
+```
 
 ---
 
-## 📂 Download Path
+## 📂 Download Path Structure
 
-All downloads will be saved to:
-
-```
-./downloads/<platform>/<video_title>.mp4
-```
-
-Examples:
+All downloaded content will be saved in:
 
 ```
-./downloads/douyin/Cat_Dance.mp4
-./downloads/youtube/Funny_Video.mp4
+./downloads/{platform_name}/{video_title}/
+```
+
+**Folder Structure Example:**
+```
+downloads/
+├── douyin/
+│   ├── video_title1/
+│   │   ├── timestamp_title_video.mp4
+│   │   ├── timestamp_title_music_songname.mp3
+│   │   ├── timestamp_title_cover.jpeg
+│   │   ├── timestamp_title_avatar.jpeg
+│   │   └── timestamp_title_result.json
+│   └── video_title2/
+│       └── [files...]
+├── bilibili/
+│   └── video_title/
+│       ├── video_title.mp4
+│       └── video_title.m4a
+└── youtube/
+    └── video_title/
+        ├── video_title.mp4
+        └── video_title.webm
 ```
 
 ---
 
 ## 📌 Supported Platforms
 
-| Platform   | Method       | Download Support       |
-|------------|--------------|------------------------|
-| Douyin     | Playwright   | ✅ Watermark-Free       |
-| Bilibili   | yt-dlp       | ✅                      |
-| YouTube    | yt-dlp       | ✅                      |
-| Others     | yt-dlp       | ✅ (Any yt-dlp-supported platform) |
+| Platform | Processing Method | Download Support | Special Features |
+|----------|------------------|------------------|------------------|
+| Douyin | Playwright | ✅ Watermark-free | Dedicated parser, supports cover, avatar, JSON |
+| Bilibili | yt-dlp | ✅ | High-quality audio/video |
+| YouTube | yt-dlp | ✅ | Multi-format support |
+| Twitter/X | yt-dlp | ✅ | Short video download |
+| Instagram | yt-dlp | ✅ | Image/video |
+| TikTok | yt-dlp | ✅ | Short video |
+| Other Platforms | yt-dlp | ✅ | All platforms supported by yt-dlp |
 
-> 🔗 See full [yt-dlp supported sites list](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md)
+> 🔗 See [yt-dlp Supported Sites List](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md)
 
 ---
 
 ## 🛠️ Tech Stack
 
-- Python 3
-- [yt-dlp](https://github.com/yt-dlp/yt-dlp)
-- Playwright (for Douyin dynamic content parsing)
-- Standard libraries: `requests`, `re`, `os`, etc.
+- **Python 3.7+**
+- **[yt-dlp](https://github.com/yt-dlp/yt-dlp)** - Multi-platform video download
+- **Playwright** - Douyin page simulation parsing
+- **requests** - HTTP request handling
+- **rich** - Terminal beautification
+- **tqdm** - Progress bar display
 
 ---
 
@@ -95,22 +147,81 @@ Examples:
 
 ```
 .
-├── main.py              # Entry point
+├── main.py                              # Main program entry
 ├── process/
-│   └── douyin.py        # Douyin-specific parser
-├── downloads/           # Downloaded media files
-├── requirements.txt     # Dependency list
-└── README.md            # Project documentation
+│   ├── __init__.py
+│   ├── douyin.py                        # Douyin processor
+│   ├── douyin_downloader_playwright_v6.py  # Douyin dedicated parser
+│   ├── download.py                      # Universal downloader
+│   ├── result.py                        # Data converter
+│   └── utils.py                         # Utility functions
+├── downloads/                           # Video save path
+├── requirements.txt                     # Dependencies
+├── run.sh                              # Launch script
+├── .vscode/settings.json               # IDE configuration
+├── .python-version                     # Python version
+└── README.en.md                        # Project documentation
 ```
 
+---
 
-## 🤝 Contribution
+## 🚀 Quick Start
 
-Contributions are welcome via PR or Issue:
+1. **Clone Project**
+```bash
+git clone <repository-url>
+cd link2video
+```
 
-- Add support for more platforms (e.g., Kuaishou, Xiaohongshu)
-- Improve parsing logic and error handling
-- Enhance user experience and CLI feedback
+2. **Create Virtual Environment**
+```bash
+python3 -m venv venv
+source venv/bin/activate  # Linux/Mac
+# or
+venv\Scripts\activate     # Windows
+```
+
+3. **Install Dependencies**
+```bash
+pip install -r requirements.txt
+playwright install
+```
+
+4. **Start Using**
+```bash
+python main.py "https://v.douyin.com/xxxxx/" -av
+```
+
+---
+
+## 🔧 Advanced Configuration
+
+### **IDE Configuration**
+Project includes VS Code/Cursor configuration files, automatically uses virtual environment:
+- `.vscode/settings.json` - Python interpreter configuration
+- `.python-version` - Python version specification
+
+### **Cookie Support**
+Douyin download supports cookies.txt file:
+1. Place cookies.txt in project root directory
+2. Program will automatically load and use cookies
+
+### **Proxy Settings**
+yt-dlp supports proxy settings, can be added in code:
+```python
+'proxy': 'http://proxy-server:port'
+```
+
+---
+
+## 🤝 Contributing
+
+Welcome to submit PRs or Issues:
+
+- Add new platform support (like Kuaishou, Xiaohongshu)
+- Optimize parsing process and error handling
+- Improve user experience and interaction prompts
+- Add new download modes
 
 ---
 
@@ -122,10 +233,20 @@ This project is licensed under the [MIT License](./LICENSE).
 
 ## ⚠️ Disclaimer
 
-This tool is intended for **educational and research purposes only**. Do not use it to violate platform terms of service or infringe on the rights of others.
+This tool is for learning and technical research purposes only. Do not use it for any behavior that violates platform service agreements or infringes on others' rights.
 
-You are solely responsible for how you use this tool. The author is **not liable** for any legal issues or consequences resulting from downloading, distributing, or modifying content from third-party platforms.
+Users are responsible for their own usage behavior. Any legal disputes and consequences arising from using this tool to download, distribute, or modify others' content are not related to the author.
 
-If you encounter copyright-related issues, please contact the original platform or content creators.
+For copyright issues, please contact the original video platform or content creators.
 
 ---
+
+## 📞 Support
+
+If you encounter problems or have suggestions, please:
+
+1. Check [Issues](../../issues) for similar problems
+2. Create a new Issue describing the problem
+3. Provide detailed error information and reproduction steps
+
+**Enjoy downloading!** 🎉
