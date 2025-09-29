@@ -1,3 +1,5 @@
 downloads/
 *cache*
-*.sh
+.idea/
+.vscode/
+venv/

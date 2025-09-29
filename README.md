@@ -174,7 +174,19 @@ downloads/
 │   ├── douyin_downloader_playwright_v6.py  # 抖音专用解析器
 │   ├── download.py                      # 通用下载器
 │   ├── result.py                        # 数据转换器
-│   └── utils.py                         # 工具函数
+│   ├── utils.py                         # 工具函数
+│   └── xiaohongshu_playwright.py        # 小红书专用解析器
+├── build/                               # 打包相关文件
+│   ├── README.md                        # 打包说明
+│   ├── build.py                         # 通用打包脚本
+│   ├── build_simple.py                 # 简化版打包脚本（推荐）
+│   ├── build_standalone.py             # 完整版打包脚本
+│   ├── build_windows.py                # Windows专用打包
+│   ├── build_macos.py                  # macOS专用打包
+│   ├── test_build.py                   # 打包环境测试
+│   ├── BUILD_GUIDE.md                  # 打包指南
+│   ├── PACKAGE_README.md               # 打包说明文档
+│   └── 用户使用说明.md                  # 最终用户使用说明
 ├── downloads/                           # 视频保存路径
 ├── requirements.txt                     # 依赖文件
 ├── run.sh                              # 启动脚本
@@ -182,6 +194,37 @@ downloads/
 ├── .python-version                     # Python版本
 └── README.md                           # 项目说明文档
 ```
+
+---
+
+## 📦 打包成可执行文件
+
+本项目支持打包成完全独立的可执行文件，让普通用户无需安装Python或任何依赖即可使用。
+
+### 开发者打包
+```bash
+# 1. 创建虚拟环境（如果还没有）
+python3 -m venv venv
+
+# 2. 激活虚拟环境
+source venv/bin/activate  # macOS/Linux
+# 或
+venv\Scripts\activate     # Windows
+
+# 3. 安装依赖
+pip install -r requirements.txt
+
+# 4. 进入build目录
+cd build
+
+# 5. 运行简化打包（推荐）
+python build_simple.py
+```
+
+### 最终用户使用
+- 获得 `link2video.exe` 文件后，直接双击运行即可
+- 无需安装Python、虚拟环境或任何依赖
+- 详细使用说明请查看 `build/用户使用说明.md`
 
 ---
 
